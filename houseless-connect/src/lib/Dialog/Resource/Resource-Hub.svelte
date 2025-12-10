@@ -121,7 +121,7 @@
     {/if}
   {:else if (currentPage == 4 && lookUpOrRegister == 'Lookup') || (currentPage == 3 && lookUpOrRegister == 'Register')}
     <div class="d-flex flex-column">
-      <span class="fs-3">Confirm Your Identity</span>
+      <span class="fs-5">Confirm Your Identity</span>
       <span>{temporaryPerson.name}</span>
       <span>{temporaryPerson.dob}</span>
     </div>

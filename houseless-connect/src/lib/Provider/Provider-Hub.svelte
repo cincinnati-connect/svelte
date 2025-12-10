@@ -126,15 +126,19 @@
 {:else if currentPage === 4}
   {#if lookUpOrRegister == 'Register' || needsID}
     {#if needsID}
-      <span>{temporaryPerson.name} is all checked in!</span>
-    {:else}<span>You are registered!</span>
+      <span style="text-align: center" class="fs-1 text-success"
+        >{temporaryPerson.name} is all checked in!</span
+      >
+    {:else}<span style="text-align: center" class="fs-1 text-success">You are registered!</span>
     {/if}
-    <span
+    <span style="text-align: center"
       >Here is your ID, take a picture and we will <a href="#" onclick={() => window.print()}
         >Print</a
       > it too!</span
     >
-    <TestGenerator value={temporaryPerson} />
+    <div class="m-auto">
+      <TestGenerator value={temporaryPerson} />
+    </div>
   {:else}
     <span>{temporaryPerson.name} is all checked in!</span>
   {/if}

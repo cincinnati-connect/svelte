@@ -5,12 +5,14 @@
 </script>
 
 <div class="d-flex flex-column align-items-center justify-content-center no-select">
-  <span class="fs-1 text-success">Your Pass is ready!</span>
-  <span
+  <span style="text-align: center" class="fs-1 text-success">Your Pass is ready!</span>
+  <span style="text-align: center"
     >Please <a href="#" onclick={() => window.print()}>print</a> or take a picture of your pass</span
   >
   {#if additionalText !== null}
-    <span>{additionalText}</span>
+    <span style="text-align: center">{additionalText}</span>
   {/if}
-  <TestGenerator {value} />
+  <div class="m-auto">
+    <TestGenerator {value} />
+  </div>
 </div>
