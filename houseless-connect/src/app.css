@@ -13,6 +13,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.no-select {
+  user-select: none;
+}
+
+.truncate-text-single-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.height-full {
+  height: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,6 +46,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 h1 {
@@ -39,12 +59,12 @@ h1 {
   padding: 2em;
 }
 
-#app {
+/* #app {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} */
 
 button {
   border-radius: 8px;
