@@ -61,7 +61,7 @@
   aria-hidden="true"
   bind:this={modalElement}
 >
-  <div class="modal-dialog modal-dialog-scrollable">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header no-select">
         <h1 class="modal-title fs-5" id="exampleModalLabel">{headerText}</h1>

@@ -4,13 +4,13 @@ const initialPeople = [
   {
     id: 1,
     name: 'Jordan Herman',
-    dob: new Date('05-09-2002').toISOString().split('T')[0],
+    dob: new Date('2002-05-09').toISOString().split('T')[0],
     hasID: false,
   },
   {
     id: 2,
     name: 'Zachary Herman',
-    dob: new Date('05-09-2002').toISOString().split('T')[0],
+    dob: new Date('2002-05-09').toISOString().split('T')[0],
     hasID: true,
   },
 ];

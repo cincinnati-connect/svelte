@@ -36,7 +36,7 @@
 </script>
 
 <main class="p-2 d-flex flex-column height-full w-100">
-  {#if showPortraitWarning}
+  {#if showPortraitWarning && currentView === 'Home'}
     <div class="orientation-warning-overlay">
       <div class="popup">
         <h2>Please Rotate Your Device 📱🔄</h2>
