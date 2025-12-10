@@ -1,6 +1,7 @@
 <script>
   import { get } from 'svelte/store';
-  import { markerRegistry } from '../Map/Marker.store.svelte';
+  import { homeMarkerRegistry, markerRegistry } from '../Map/Marker.store.svelte';
+  import iconUrl from 'leaflet/dist/images/marker-icon.png';
 
   let { resource } = $props();
 
@@ -44,36 +45,55 @@
       marker._map.panTo(marker.getLatLng());
     }
   }
+
+  function showHomeMapPin() {
+    const markers = get(homeMarkerRegistry);
+    const marker = markers[1];
+
+    if (marker) {
+      marker.openPopup();
+      marker._map.panTo(marker.getLatLng());
+    }
+  }
 </script>
 
-{#if resource.Lon !== null && resource.Lat !== null}
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <div
-    class="d-flex flex-row align-items-center cursor-pointer"
-    onclick={() => showMapPin(resource)}
-  >
-    <svg
-      class="list-pin-icon flex-shrink-0 me-2"
-      fill={getPin(resource)}
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
-      ><path
-        d="M10 20s-7-5.5-7-10c0-3.8 3.2-7 7-7s7 3.2 7 7c0 4.5-7 10-7 10zM10 6c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"
-      /></svg
+{#if resource.resourceType !== 'Bus Station'}
+  {#if resource.Lon !== null && resource.Lat !== null}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <div
+      class="d-flex flex-row align-items-center cursor-pointer"
+      onclick={() => showMapPin(resource)}
     >
-    <span class="flex-grow-1 truncate-text-single-line">{resource.name}</span>
-  </div>
+      <svg
+        class="list-pin-icon flex-shrink-0 me-2"
+        fill={getPin(resource)}
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+        ><path
+          d="M10 20s-7-5.5-7-10c0-3.8 3.2-7 7-7s7 3.2 7 7c0 4.5-7 10-7 10zM10 6c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z"
+        /></svg
+      >
+      <span class="flex-grow-1 truncate-text-single-line">{resource.name}</span>
+    </div>
+  {:else}
+    <div class="d-flex flex-column no-select">
+      <div class="border-bottom pb-2 mb-2">
+        <span>{resource.name}</span>
+      </div>
+      <div class="border-bottom pb-2 mb-2">
+        <span>{resource.description}</span>
+      </div>
+      <span>Phone: <a href="tel:{resource.phone}">{resource.phone}</a></span>
+      <span>Hours: {resource.hours}</span>
+    </div>
+  {/if}
 {:else}
-  <div class="d-flex flex-column no-select">
-    <div class="border-bottom pb-2 mb-2">
-      <span>{resource.name}</span>
-    </div>
-    <div class="border-bottom pb-2 mb-2">
-      <span>{resource.description}</span>
-    </div>
-    <span>Phone: <a href="tel:{resource.phone}">{resource.phone}</a></span>
-    <span>Hours: {resource.hours}</span>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <div class="d-flex flex-row align-items-center cursor-pointer" onclick={() => showHomeMapPin()}>
+    <img class="me-2" src={iconUrl} alt="an icon indicating a bus station" />
+    <span class="flex-grow-1 truncate-text-single-line">{resource.name}kjhbascxskb</span>
   </div>
 {/if}
 

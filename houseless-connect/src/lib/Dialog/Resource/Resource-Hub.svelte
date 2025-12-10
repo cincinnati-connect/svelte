@@ -17,7 +17,6 @@
 
   let isActive = $state(false);
   canSubmit = true;
-  //   let temporaryPerson = $state({ name: '', dob: new Date(), hasID: false });
 
   disableNextButton = true;
   let scanOrSearch = $state('Scan');

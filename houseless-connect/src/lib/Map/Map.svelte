@@ -67,7 +67,6 @@
 
   L.Marker.prototype.options.icon = defaultIcon;
 
-  // --- INTERACTIVE FUNCTION: CALLED BY POPUP CLICK ---
   function onBusRouteSelected(route) {
     console.log(`Route selected: ${route}`);
     busRouteSelected(route);
@@ -82,17 +81,15 @@
     // @ts-ignore
     const HomeControl = L.Control.extend({
       options: {
-        position: 'topleft', // ⬅️ Ensures placement with default zoom controls
+        position: 'topleft',
       },
 
       onAdd: function (map) {
-        // Create the container div, ensuring it uses the standard Leaflet class structure
         const container = L.DomUtil.create(
           'div',
           'leaflet-bar leaflet-control leaflet-control-custom'
         );
 
-        // Using an icon or text here
         container.innerHTML = '🏠';
 
         container.onclick = function () {
@@ -112,7 +109,6 @@
   }
 
   function createLegendControl(position, legendItems) {
-    // 1. Extend L.Control
     // @ts-ignore
     const Legend = L.Control.extend({
       options: {
@@ -120,37 +116,27 @@
       },
 
       onAdd: function (map) {
-        // 2. Create the container div
         const div = L.DomUtil.create('div', 'info legend');
         let labels = [];
 
-        // 3. Loop through your data and generate the HTML
         legendItems.forEach((item) => {
-          labels.push(
-            // Use an inline style for the color box and include the label
-            `<i style="background:${item.color};"></i> ${item.label}`
-          );
+          labels.push(`<i style="background:${item.color};"></i> ${item.label}`);
         });
 
-        // 4. Insert HTML into the container
         div.innerHTML = '<h4>Map Legend</h4>' + labels.join('<br>');
 
-        // Prevent clicks/scrolls inside the legend from affecting the map
         L.DomEvent.disableClickPropagation(div);
         L.DomEvent.disableScrollPropagation(div);
 
         return div;
       },
 
-      onRemove: function (map) {
-        // Clean up if needed
-      },
+      onRemove: function (map) {},
     });
 
     return new Legend();
   }
 
-  // --- UTILITY FUNCTIONS ---
   function getDistance(lat1, lon1, lat2, lon2) {
     const R = 3958.8;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -247,16 +233,11 @@
 
             const resourceLinks = popup.querySelectorAll('.resource-link');
             resourceLinks.forEach((link) => {
-              // Attach a standard DOM click handler
               link.onclick = function () {
-                // Get the route name from the data attribute
                 const resourceID = this.getAttribute('data-resource');
-
-                // Call the Svelte function
                 onResourceRouteSelected(resourceID);
                 console.log('shelter selected: ', resourceID);
 
-                // Close the popup after selection
                 userMarker.closePopup();
               };
             });
@@ -274,11 +255,6 @@
     if (nodeToHide) {
       nodeToHide.style.display = 'none';
     }
-  }
-
-  function plotBusStation() {
-    // This function is currently commented out in the original file, leaving it as is.
-    // Use the commented logic if you intend to plot a single bus station.
   }
 
   function formatToLeafletCoordinates(customPointsArray) {
@@ -355,10 +331,7 @@
     }
   }
 
-  // --- INITIALIZATION ---
-
   onMount(() => {
-    // 1. Determine Initial Center: Use default location
     const initialCenterLat = defaultLocation.lat;
     const initialCenterLong = defaultLocation.lng;
     const initialZoom = 15;
@@ -368,7 +341,6 @@
       zoom: initialZoom,
     };
 
-    // 2. Initialize Map
     map = L.map(mapContainer).setView([initialCenterLat, initialCenterLong], initialZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -376,24 +348,17 @@
       attribution: '',
     }).addTo(map);
 
-    // 3. Initialize Layer Groups
     shelterLayerGroup = L.layerGroup().addTo(map);
     routeLayerGroup = L.layerGroup().addTo(map);
     stationLayerGroup = L.layerGroup().addTo(map);
 
     const [fixedLat, fixedLng] = [defaultLocation.lat, defaultLocation.lng];
 
-    // 4. Plot Elements immediately
     plotRoutes();
-    plotBusStation();
     plotShelters([fixedLat, fixedLng]);
 
-    // --- PLOT FIXED LOCATION MARKER & ATTACH INTERACTIVE POPUP ---
-
-    // Create the marker
     userMarker = L.marker([fixedLat, fixedLng]).addTo(map);
 
-    // Define HTML content for the popup with multiple routes
     const popupHTML = `
       <div class="no-select">
         <b>Vine St & McMillan St Southbound</b><br />
@@ -419,26 +384,19 @@
       </ul>
     `;
 
-    // Bind popup content and open it
     userMarker.bindPopup(popupHTML);
 
-    // Attach the Svelte handler AFTER the popup opens and the HTML is in the DOM
     userMarker.on('popupopen', function () {
       const popup = this.getPopup().getElement();
 
-      // Select all the interactive route elements
       const routeLinks = popup.querySelectorAll('.route-link');
 
       routeLinks.forEach((link) => {
-        // Attach a standard DOM click handler
         link.onclick = function () {
-          // Get the route name from the data attribute
           const routeName = this.getAttribute('data-route');
 
-          // Call the Svelte function
           onBusRouteSelected(routeName);
 
-          // Close the popup after selection
           userMarker.closePopup();
         };
       });
@@ -449,19 +407,7 @@
     homeMarkerRegistry.set(userMarkerHub);
 
     userMarker.openPopup();
-    // -------------------------------------------------------------
 
-    // L.circle([fixedLat, fixedLng], {
-    //   color: 'blue',
-    //   fillColor: '#30f',
-    //   fillOpacity: 0.05,
-    //   radius: 80467.2, // ~50 miles
-    // }).addTo(map);
-
-    // Plot the shelters using the fixed location
-    // ----------------------------------------
-
-    // --- Dynamic Height Listener (UNCHANGED) ---
     const resizeObserver = new ResizeObserver(() => {
       if (map) {
         map.invalidateSize();
@@ -470,12 +416,6 @@
 
     resizeObserver.observe(mapContainer);
 
-    // const homeControl = createHomeControl(map, {
-    //   lat: initialCenterLat,
-    //   lng: initialCenterLong,
-    //   zoom: initialZoom,
-    // });
-    // homeControl.addTo(map);
     addElementToZoomControl(initialLoc);
     const legend = createLegendControl('topright', legendData);
     legend.addTo(map);
@@ -486,8 +426,6 @@
       }
       resizeObserver.disconnect();
     });
-
-    // ------------------------------------------
   });
 </script>
 
@@ -511,28 +449,23 @@
     height: 25px;
   }
 
-  /* Optional: Add a style for the clickable list item */
   :global(.route-link) {
     cursor: pointer;
     padding: 2px 0;
-    list-style: none; /* remove bullet point */
+    list-style: none;
     font-weight: bold;
-    color: #007bff; /* Blue link color */
+    color: #007bff;
     text-decoration: underline;
   }
 
   :global(.info.legend) {
-    /* --- Background & Border --- */
-    background: white; /* ⬅️ Sets the solid white background */
-    background: rgba(255, 255, 255, 0.95); /* Optional: Use slightly transparent white */
-    border-radius: 6px; /* Rounds the corners */
-    padding: 10px 12px; /* Adds space around the content */
-
-    /* --- Visual Separation --- */
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4); /* Adds a subtle shadow */
+    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
   }
 
-  /* Style for the title */
   :global(.legend h4) {
     margin-top: 0;
     margin-bottom: 5px;
@@ -541,15 +474,14 @@
     color: #333;
   }
 
-  /* Style for the colored icon blocks */
   :global(.legend i) {
     width: 18px;
     height: 18px;
     float: left;
     margin-right: 8px;
-    opacity: 1; /* Ensure the color is visible */
+    opacity: 1;
     border-radius: 50%;
-    border: 1px solid #ccc; /* Optional: adds a slight border to the color sample */
+    border: 1px solid #ccc;
   }
 
   :global(.leaflet-control-custom) {
@@ -563,17 +495,14 @@
   }
 
   :global(.leaflet-popup-pane) {
-    z-index: 2000 !important; /* Set a value higher than default controls (typically 1000 or 1004) */
+    z-index: 2000 !important;
   }
 
-  /* Optional: Also set the individual popup to be safe */
   :global(.leaflet-popup) {
     z-index: 2000 !important;
   }
 
-  /* -------------------------------------- */
-  /* You may also check the legend's z-index if the above doesn't work */
   :global(.leaflet-control) {
-    z-index: 1000; /* Ensure controls are below popups */
+    z-index: 1000;
   }
 </style>

@@ -1,4 +1,5 @@
 <script>
+  import { homeMarkerRegistry } from '../Map/Marker.store.svelte';
   import TextInput from '../Shared-Components/Text-Input.svelte';
   import { resources } from './Resource.store.svelte';
   import Resource from './Resource.svelte';
@@ -7,6 +8,7 @@
   let searchTerm = $state('');
 
   const resourceStore = resources;
+  const homeMarker = { resourceType: 'Bus Station', name: 'Vine St & McMillan St Southbound' };
 
   const resourceTypes = [
     'Mental Health & Substance Use',
@@ -37,13 +39,9 @@
   };
 
   $effect.pre(() => {
-    // 1. Run once immediately to get initial size
     updateDimensions();
-
-    // 2. Add the listener
     window.addEventListener('resize', updateDimensions);
 
-    // 3. Return a cleanup function
     return () => {
       window.removeEventListener('resize', updateDimensions);
     };
@@ -58,18 +56,9 @@
   }
 </script>
 
-<!-- <div style="width: 20vw h-100" class="ps-2" id="resource">
-  <span class="fs-3">Resources:</span>
-  {#each resourceStore as resource, index}
-    <div class="w-100 border rounded p-2 {index < resourceStore.length - 1 ? 'mb-2' : ''}">
-      <Resource {resource} />
-    </div>
-  {/each}
-</div> -->
-
 <div class="d-flex flex-column ps-2" style="width: 20vw;" id="resource">
   <div class="mb-2">
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-column flex-md-row justify-content-between">
       <span class="fs-3">Resources:</span>
       <div>
         <button onclick={() => enableSearch()} class="btn btn-{showSearch ? 'danger' : 'primary'}"
@@ -84,6 +73,12 @@
     {/if}
   </div>
   <div class="flex-grow-1 overflow-auto">
+    <div class="mb-1 border-bottom truncate-text-single-line">
+      <span class="fs-5">Bus Stations:</span>
+      <div class="w-100 border rounded p-2 mb-2">
+        <Resource resource={homeMarker} />
+      </div>
+    </div>
     {#each resourceTypes as resourceType}
       {#if !showSearch || (showSearch && searchTerm === '') || (showSearch && resourceStore.find((resource) => resource.name
                 .toLowerCase()
